@@ -8,14 +8,14 @@
 
 ## 🎯 **OVERVIEW**
 
-TrueVow DRAFT™ is a **document assembly service** that assembles initial drafts of legal documents (demand letters, pleadings, contracts) from attorney-configured templates and data inputs. The service includes **hierarchical compliance validators** to ensure Bar compliance and prevent malpractice.
+TrueVow DRAFT™ is a **compliance validation service** that validates completed legal documents against attorney-configured rules. The service provides **client-side validation** to ensure Bar compliance and prevent malpractice, maintaining **zero-knowledge architecture** where documents never leave the attorney's device.
 
 **Key Features:**
-- ✅ Document assembly from attorney-provided templates
+- ✅ Client-side validation (document never uploaded to TrueVow)
 - ✅ 5-level hierarchical compliance validators
 - ✅ Practice area, specialization, document type, and jurisdiction-specific validation
-- ✅ Mandatory watermark and signature block lock-out
-- ✅ Attorney review and certification workflow
+- ✅ Zero-knowledge architecture (TrueVow never sees document content)
+- ✅ Optional template-based document assembly (supporting service)
 
 ---
 
@@ -30,10 +30,11 @@ DRAFT is a **separate service** (not part of Tenant App):
 - **Deployment:** Shared service (one container), not per-tenant
 
 **Why Separate:**
-- Centralized template library (shared across all tenants)
-- Centralized validator rules (easier to maintain and update)
+- Centralized validator rules library (shared across all tenants)
+- Centralized template library (optional supporting service)
 - Different access patterns than tenant-specific Intake
 - SaaS Admin manages centrally, not per-tenant
+- Client-side validation engine (runs on attorney's device)
 
 ---
 
@@ -44,9 +45,9 @@ DRAFT is a **separate service** (not part of Tenant App):
 ├── app/
 │   ├── api/v1/
 │   │   ├── endpoints/
-│   │   │   ├── documents.py      # Document generation endpoints
-│   │   │   ├── templates.py      # Template management endpoints
-│   │   │   └── validation.py    # Validation endpoints
+│   │   │   ├── validation.py    # Validation rules sync endpoints
+│   │   │   ├── templates.py      # Template management endpoints (optional)
+│   │   │   └── analytics.py     # Usage analytics endpoints (optional)
 │   │   └── router.py
 │   ├── services/
 │   │   ├── document_assembler.py # Document assembly logic
@@ -83,11 +84,19 @@ DRAFT is a **separate service** (not part of Tenant App):
 
 ### **5-Level Hierarchical Validator System**
 
+**Client-Side Validation Architecture:**
+- ✅ Validation rules synced to attorney's device (encrypted)
+- ✅ Document validated locally (never uploaded to TrueVow)
+- ✅ Results shown locally (never sent to TrueVow)
+- ✅ Zero-knowledge maintained (TrueVow never sees document content)
+
+**Validator Levels:**
+
 1. **Level 1: Universal Validators** (ALL documents)
-   - Mandatory "DRAFT ONLY" watermark
-   - Signature block lock-out
+   - Required fields check (statute of limitations, venue, jurisdiction)
+   - Signature block validation
    - Attorney review requirement
-   - Template safety validator
+   - Document completeness check
 
 2. **Level 2: Practice Area Validators**
    - Personal Injury, Family Law, Criminal Law, Corporate Law, Immigration Law
@@ -105,7 +114,7 @@ DRAFT is a **separate service** (not part of Tenant App):
    - State, County, Court-specific rules
    - Local court rules, filing fees, formatting requirements
 
-**See:** `docs/DRAFT_COMPLIANCE_VALIDATOR_SUMMARY.md` for complete details
+**See:** `docs/DRAFT_COMPLIANCE_VALIDATOR_SUMMARY.md` and `docs/DRAFT_CLIENT_SIDE_VALIDATION_ARCHITECTURE.md` for complete details
 
 ---
 
@@ -113,43 +122,50 @@ DRAFT is a **separate service** (not part of Tenant App):
 
 ### **Tenant App → DRAFT Service**
 
-**Use Case:** Attorney wants to generate a document during case management
+**Use Case:** Attorney wants to validate a completed document
 
-**API Endpoint:** `POST /api/v1/documents/generate`
+**Primary Flow (Client-Side Validation):**
+1. Attorney completes document locally
+2. Attorney opens DRAFT validation tool (browser extension or desktop app)
+3. Validation rules synced from DRAFT service (encrypted)
+4. Document validated locally (never uploaded)
+5. Results shown locally (red/yellow/green flags)
+
+**API Endpoint (Validation Rules Sync):** `GET /api/v1/validation-rules`
 
 **Request:**
 ```json
 {
-    "template_id": "uuid",
     "practice_area": "personal_injury",
     "specialization": "car_accident",
     "document_type": "demand_letter",
     "jurisdiction_state": "AZ",
-    "jurisdiction_county": "Maricopa",
-    "data": {
-        "client_name": "John Doe",
-        "date": "2025-12-05",
-        "venue": "Maricopa County Superior Court"
-    }
+    "jurisdiction_county": "Maricopa"
 }
 ```
 
 **Response:**
 ```json
 {
-    "document_id": "uuid",
-    "content": "...",
-    "validation_status": "passed",
-    "validation_report": {
-        "level_1": {"watermark": true, "signature": true},
-        "level_2": {"practice_area": true},
-        "level_3": {"specialization": true},
-        "level_4": {"document_type": true},
-        "level_5": {"jurisdiction": true}
-    },
-    "warnings": ["Citation audit required", "Local rule placeholder detected"]
+    "validation_rules": [
+        {
+            "level": 1,
+            "validator_name": "statute_of_limitations",
+            "validator_config": {"state": "AZ", "limitation_years": 2},
+            "error_message": "Statute of limitations check required"
+        },
+        // ... more rules
+    ],
+    "encrypted": true
 }
 ```
+
+**Optional Flow (Template Assembly):**
+- Attorney selects template
+- Attorney manually enters all data (from consultation)
+- DRAFT assembles document
+- Attorney reviews and edits
+- Attorney validates using client-side validation
 
 ### **SaaS Admin → DRAFT Service**
 
