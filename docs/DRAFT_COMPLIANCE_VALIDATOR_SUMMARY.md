@@ -40,49 +40,45 @@ Validates completed legal documents (e.g., demand letters, pleadings) against at
 
 ## 🛡️ **COMPLIANCE VALIDATORS**
 
-### **1. Mandatory "DRAFT ONLY" Watermark Validator**
+### **1. Required Fields Validator (Universal - Level 1)**
 
 **Requirement:**
-Every document generated MUST include the following watermark on the first page:
+Every document MUST include required fields (statute of limitations date, venue, jurisdiction) before filing.
 
-```
-"DRAFT – FOR ATTORNEY REVIEW ONLY. NOT FILED. NO WARRANTY OF ACCURACY. TRUEVOW IS NOT RESPONSIBLE FOR SUBSEQUENT EDITS."
-```
-
-**Validation Logic:**
-- ✅ **Pre-Generation Check:** System validates watermark is present in template
-- ✅ **Post-Generation Check:** System validates watermark appears on first page
-- ✅ **Blocking:** Document cannot be exported/downloaded without watermark
-- ✅ **Visual Indicator:** Watermark must be clearly visible (not hidden)
+**Validation Logic (Client-Side):**
+- ✅ **Field Presence Check:** Validation engine checks for required fields in document (locally)
+- ✅ **Missing Fields Detection:** System flags missing required fields
+- ✅ **Blocking:** Document validation fails if critical fields missing
+- ✅ **Visual Indicator:** Red/yellow/green flags shown locally (never sent to TrueVow)
 
 **Compliance Rule:**
-- ABA Model Rule 1.1 (Competence)
-- MSA Section 3.4 (All documents labeled as "DRAFTS")
+- ABA Model Rule 1.1 (Competence - required information must be present)
+- Malpractice prevention (prevents filing incomplete documents)
 
 **Error Handling:**
-- If watermark missing: Document generation blocked
-- Warning message: "Watermark required for Bar compliance"
+- If required field missing: Validation fails, red flag displayed
+- Warning message: "Required field missing: [field_name]"
 
 ---
 
-### **2. Signature Block Lock-Out Validator**
+### **2. Document Completeness Validator (Universal - Level 1)**
 
 **Requirement:**
-The system pre-populates `[ATTORNEY NAME], [STATE] Bar No. _______` but **leaves the signature line blank**. Attorney must manually insert digital signature or wet sign.
+Every document MUST have all required sections present (caption, body, signature block, etc.).
 
-**Validation Logic:**
-- ✅ **Pre-Population:** System auto-fills attorney name and bar number
-- ✅ **Signature Line:** MUST remain blank (no auto-signature)
-- ✅ **Blocking:** Document cannot be finalized with blank signature
-- ✅ **Review Enforcement:** Forces attorney review before signing
+**Validation Logic (Client-Side):**
+- ✅ **Section Presence Check:** Validation engine checks for required sections (locally)
+- ✅ **Missing Sections Detection:** System flags missing required sections
+- ✅ **Blocking:** Document validation fails if critical sections missing
+- ✅ **Visual Indicator:** Red/yellow/green flags shown locally
 
 **Compliance Rule:**
-- ABA Model Rule 1.1 (Competence - non-delegable duty to review)
-- Malpractice prevention (prevents filing unreviewed documents)
+- ABA Model Rule 1.1 (Competence - document must be complete)
+- Court rules (varies by jurisdiction)
 
 **Error Handling:**
-- If signature line pre-filled: Document generation blocked
-- Warning message: "Signature line must remain blank to force attorney review"
+- If required section missing: Validation fails, red flag displayed
+- Warning message: "Required section missing: [section_name]"
 
 ---
 
@@ -107,88 +103,75 @@ Attorney MUST run citation-check software (e.g., Lexis BriefCheck) on every plea
 
 ---
 
-### **4. Local Rule Overlay Validator**
+### **4. Local Rule Compliance Validator (Jurisdiction - Level 5)**
 
 **Requirement:**
-Some districts (e.g., S.D.N.Y. Local Civ. R. 11.2) require counsel's e-mail address in the caption. DRAFT inserts a placeholder — **attorney must replace it**.
+Some districts (e.g., S.D.N.Y. Local Civ. R. 11.2) require counsel's e-mail address in the caption. Validation checks if local rule requirements are met.
 
-**Validation Logic:**
-- ✅ **Placeholder Detection:** System identifies placeholder fields in template
-- ✅ **Jurisdiction Check:** System checks if jurisdiction has local rule requirements
-- ✅ **Warning Display:** System displays warning about placeholder fields
-- ✅ **Replacement Tracking:** System tracks which placeholders were replaced
+**Validation Logic (Client-Side):**
+- ✅ **Local Rule Check:** Validation engine checks document against local rule requirements (locally)
+- ✅ **Missing Requirements Detection:** System flags missing local rule requirements
+- ✅ **Warning Display:** System displays warning about missing requirements
+- ✅ **Jurisdiction-Specific Rules:** System applies jurisdiction-specific validation rules
 
 **Compliance Rule:**
 - Local court rules (varies by jurisdiction)
 - ABA Model Rule 1.1 (Competence - following court rules)
 
 **Warning Messages:**
-- "⚠️ Local Rule Overlay: This jurisdiction requires counsel's e-mail address in the caption. Please replace placeholder with your actual e-mail address."
-- "⚠️ Placeholder Detected: [PLACEHOLDER_FIELD] must be replaced before filing."
+- "⚠️ Local Rule Compliance: This jurisdiction requires counsel's e-mail address in the caption. Please add if missing."
+- "⚠️ Local Rule Violation: [RULE_NAME] requirement not met."
 
 ---
 
-### **5. Template Safety Validator**
+### **5. Practice Area Requirements Validator (Practice Area - Level 2)**
 
 **Requirement:**
-DRAFT populates **attorney-provided templates** with **safe fields only** (client name, date, venue). No legal conclusions, clauses, or strategy are generated.
+Different practice areas have different compliance requirements (statute of limitations, HIPAA, insurance disclosure, etc.).
 
-**Validation Logic:**
-- ✅ **Template Source Check:** System validates template is attorney-provided (not AI-generated)
-- ✅ **Field Safety Check:** System validates only safe fields are populated (name, date, venue)
-- ✅ **Content Generation Block:** System blocks generation of legal conclusions, clauses, or strategy
-- ✅ **Logic Validation:** System validates only attorney-defined logic is applied
-
-**Safe Fields (Allowed):**
-- Client name
-- Date
-- Venue
-- Case number (if provided)
-- Attorney name
-- Bar number
-
-**Prohibited Fields (Blocked):**
-- Legal conclusions
-- Legal clauses
-- Legal strategy
-- Novel arguments
-- Legal research results
+**Validation Logic (Client-Side):**
+- ✅ **Practice Area Check:** Validation engine checks document against practice area requirements (locally)
+- ✅ **Missing Requirements Detection:** System flags missing practice area requirements
+- ✅ **Practice Area-Specific Rules:** System applies practice area-specific validation rules
 
 **Compliance Rule:**
-- ABA Model Rule 5.5 (Unauthorized Practice of Law)
-- System does NOT practice law - only assembles documents
+- ABA Model Rule 1.1 (Competence - practice area-specific requirements)
+- State-specific requirements (varies by practice area)
 
 **Error Handling:**
-- If unsafe field detected: Document generation blocked
-- Warning message: "Unsafe field detected. Only safe fields (name, date, venue) are allowed."
+- If practice area requirement missing: Validation fails or warning displayed
+- Warning message: "Practice area requirement missing: [requirement_name]"
 
 ---
 
-### **6. Attorney Review Requirement Validator**
+### **6. Attorney Review Requirement Validator (Universal - Level 1)**
 
 **Requirement:**
 Attorney bears **non-delegable duty** to review, edit, and certify the accuracy, completeness, and appropriateness of every document before filing or sending.
 
-**Validation Logic:**
-- ✅ **Review Status Tracking:** System tracks document review status (draft, reviewed, certified)
-- ✅ **Certification Requirement:** System requires attorney certification before document can be finalized
-- ✅ **Edit History:** System logs all edits made by attorney
-- ✅ **Review Time Tracking:** System tracks time between generation and review
+**Requirement:**
+Attorney bears **non-delegable duty** to review, edit, and certify the accuracy, completeness, and appropriateness of every document before filing or sending.
+
+**Validation Logic (Client-Side):**
+- ✅ **Review Checklist:** Validation engine provides pre-filing checklist (locally)
+- ✅ **Certification Requirement:** System requires attorney to acknowledge review before filing
+- ✅ **Review Confirmation:** Attorney confirms document has been reviewed (local only, not sent to TrueVow)
+- ✅ **Warning Display:** System displays warning about attorney review requirement
 
 **Compliance Rule:**
 - ABA Model Rule 1.1 (Competence - non-delegable duty)
-- MSA Section 3.4 (Attorney review required)
+- Malpractice prevention (prevents filing unreviewed documents)
 
 **Critical Warning:**
-> **"Reliance on DRAFT™ without independent attorney review is a breach of your ethical duty of competence."**
+> **"Reliance on DRAFT™ validation without independent attorney review is a breach of your ethical duty of competence."**
 
 **Workflow:**
-1. Document generated with "DRAFT" watermark
-2. Attorney reviews document
-3. Attorney makes edits (if needed)
-4. Attorney certifies document (checkboxes required)
-5. Document status changes to "reviewed" or "certified"
-6. Document can be finalized/exported
+1. Attorney completes document locally
+2. Attorney runs client-side validation
+3. Attorney reviews validation results (red/yellow/green flags)
+4. Attorney fixes issues in document
+5. Attorney confirms document has been reviewed (local confirmation only)
+6. Attorney files document
 
 ---
 
@@ -200,12 +183,12 @@ Attorney bears **non-delegable duty** to review, edit, and certify the accuracy,
 Attorney might file unreviewed documents, resulting in malpractice.
 
 **Safeguards:**
-- ✅ All documents explicitly labeled as "DRAFTS" (MSA 3.4)
+- ✅ Client-side validation (document never uploaded, attorney maintains control)
 - ✅ Attorney bears non-delegable duty to review, edit, certify before filing
-- ✅ TrueVow DRAFT is a modern, efficient typewriter, not a legal strategist
-- ✅ Signature block lock-out forces review
-- ✅ Citation audit required
-- ✅ Watermark on every page
+- ✅ TrueVow DRAFT is a compliance validation tool, not a legal strategist
+- ✅ Pre-filing checklist forces review
+- ✅ Citation audit recommended
+- ✅ Required fields validation prevents incomplete filings
 
 **Compliance Status:** ✅ Compliant
 
@@ -217,11 +200,11 @@ Attorney might file unreviewed documents, resulting in malpractice.
 Document assembly might constitute practicing law.
 
 **Safeguards:**
-- ✅ System applies logic set by attorney
+- ✅ Client-side validation only (no server-side processing)
 - ✅ Does NOT conduct legal research
-- ✅ Does NOT generate novel arguments
-- ✅ Automates assembly based on pre-approved patterns
-- ✅ Populates attorney-provided templates with safe fields only
+- ✅ Does NOT generate legal content
+- ✅ Validates completed documents against attorney-configured rules
+- ✅ Only validates compliance (does not create or modify documents)
 - ✅ No legal conclusions, clauses, or strategy generated
 
 **Compliance Status:** ✅ Compliant
@@ -234,11 +217,11 @@ Document assembly might constitute practicing law.
 Filing unreviewed documents could result in malpractice claims.
 
 **Safeguards:**
-- ✅ Signature block lock-out (forces review)
-- ✅ Citation audit required
-- ✅ Watermark on every page
-- ✅ Attorney review requirement
-- ✅ Certification workflow
+- ✅ Required fields validation (prevents incomplete filings)
+- ✅ Document completeness validation
+- ✅ Pre-filing checklist (forces review)
+- ✅ Attorney review confirmation (local only)
+- ✅ Client-side validation workflow
 
 **Compliance Status:** ✅ Compliant
 
@@ -458,13 +441,20 @@ Level 5: Jurisdiction/Court Validators (e.g., State, County, Court-specific rule
 
 ### **Validator Resolution Algorithm**
 
-**When generating a document, the system applies validators in this order:**
+**When validating a completed document (client-side), the system applies validators in this order:**
 
-1. **Universal Validators** (Level 1) - Always run
-2. **Practice Area Validators** (Level 2) - Based on selected practice area
-3. **Specialization Validators** (Level 3) - Based on selected specialization
+1. **Universal Validators** (Level 1) - Always run (required fields, document completeness)
+2. **Practice Area Validators** (Level 2) - Based on document's practice area
+3. **Specialization Validators** (Level 3) - Based on document's specialization
 4. **Document Type Validators** (Level 4) - Based on document type
-5. **Jurisdiction/Court Validators** (Level 5) - Based on jurisdiction and court
+5. **Jurisdiction/Court Validators** (Level 5) - Based on document's jurisdiction and court
+
+**Client-Side Validation Process:**
+- Validation rules synced to attorney's device (encrypted)
+- Document content extracted locally (in browser/app memory)
+- Validators applied locally (on attorney's device)
+- Results shown locally (never sent to TrueVow)
+- Document content never uploaded to TrueVow servers
 
 **Example: Personal Injury - Car Accident - Demand Letter - Maricopa County, AZ**
 
@@ -783,32 +773,34 @@ Add DRAFT usage to your next malpractice insurance application or renewal. Carri
 
 ## 📊 **COMPLIANCE CHECKLIST**
 
-### **Pre-Generation Checklist**
+### **Pre-Validation Checklist (Client-Side)**
 
-- [ ] Template is attorney-provided (not AI-generated)
-- [ ] Template includes mandatory watermark
-- [ ] Template includes signature block (with blank signature line)
-- [ ] Only safe fields will be populated
-- [ ] No legal conclusions, clauses, or strategy in template
+- [ ] Document completed locally (never uploaded to TrueVow)
+- [ ] Validation rules synced to device (encrypted)
+- [ ] Document ready for validation
+- [ ] Attorney has reviewed document content
 
-### **Post-Generation Checklist**
+### **Validation Checklist (Client-Side)**
 
-- [ ] Watermark appears on first page
-- [ ] Signature line is blank
-- [ ] Only safe fields populated
-- [ ] Placeholders identified for local rule requirements
-- [ ] Citation warnings displayed
-- [ ] Document marked as "DRAFT"
+- [ ] Required fields present (statute of limitations, venue, jurisdiction)
+- [ ] Document complete (all required sections present)
+- [ ] Practice area requirements met
+- [ ] Specialization requirements met
+- [ ] Document type requirements met
+- [ ] Jurisdiction/court requirements met
+- [ ] Local rule compliance verified
+- [ ] Citation audit recommended (if applicable)
 
-### **Pre-Filing Checklist**
+### **Pre-Filing Checklist (Client-Side)**
 
 - [ ] Attorney reviewed document
-- [ ] Attorney made edits (if needed)
-- [ ] Attorney certified document
+- [ ] Attorney reviewed validation results (red/yellow/green flags)
+- [ ] Attorney fixed all critical issues (red flags)
+- [ ] Attorney addressed warnings (yellow flags)
+- [ ] Attorney confirmed document has been reviewed (local confirmation)
 - [ ] Citation audit completed (if applicable)
-- [ ] Local rule placeholders replaced
-- [ ] Watermark removed (if finalizing)
-- [ ] Signature added manually
+- [ ] Local rule requirements met
+- [ ] Document ready for filing
 
 ---
 
