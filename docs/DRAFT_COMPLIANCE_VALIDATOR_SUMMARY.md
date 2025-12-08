@@ -8,30 +8,33 @@
 
 ## 📋 **EXECUTIVE SUMMARY**
 
-TrueVow DRAFT™ is a **document assembly module** (Phase 3) that assembles initial drafts of legal documents (demand letters, pleadings) from attorney-configured templates and data inputs. The module includes **built-in compliance validators** to ensure Bar compliance and prevent malpractice.
+TrueVow DRAFT™ is a **compliance validation service** (Phase 3) that validates completed legal documents against attorney-configured rules. The service provides **client-side validation** to ensure Bar compliance and prevent malpractice, maintaining **zero-knowledge architecture** where documents never leave the attorney's device.
 
 **Key Compliance Features:**
-- ✅ Mandatory "DRAFT ONLY" watermark validator
-- ✅ Signature block lock-out validator
+- ✅ Client-side validation (document never uploaded to TrueVow)
+- ✅ Zero-knowledge architecture (TrueVow never sees document content)
+- ✅ 5-level hierarchical validator system
+- ✅ Required fields validator (statute of limitations, venue, jurisdiction)
 - ✅ Citation audit requirement validator
-- ✅ Local rule overlay validator
-- ✅ Template safety validator (safe fields only)
-- ✅ Attorney review requirement validator
+- ✅ Local rule compliance validator
+- ✅ Practice area, specialization, document type, jurisdiction validators
 
 ---
 
 ## 🎯 **MODULE FUNCTION**
 
 **Primary Function:**
-Assembles initial drafts of legal documents (e.g., demand letters, pleadings) from **attorney-configured templates** and data inputs.
+Validates completed legal documents (e.g., demand letters, pleadings) against attorney-configured validation rules using **client-side validation** (document never uploaded to TrueVow).
 
 **Key Characteristics:**
-- Uses attorney-provided templates (not AI-generated content)
-- Populates only safe fields (client name, date, venue)
+- **Client-Side Validation:** Document validated locally on attorney's device
+- **Zero-Knowledge Architecture:** Document never uploaded to TrueVow servers
+- **Validation Rules Sync:** Rules synced to attorney's device (encrypted)
+- **5-Level Hierarchical Validators:** Universal → Practice Area → Specialization → Document Type → Jurisdiction
+- **Optional Template Assembly:** Supporting service (attorney manually enters all data)
 - Does NOT conduct legal research
 - Does NOT generate novel arguments
 - Does NOT create legal conclusions, clauses, or strategy
-- Applies attorney-defined logic only
 
 ---
 
@@ -291,14 +294,14 @@ Level 5: Jurisdiction/Court Validators (e.g., State, County, Court-specific rule
 
 **These validators run for EVERY document, regardless of practice area, specialization, or document type:**
 
-1. ✅ **Mandatory "DRAFT ONLY" Watermark Validator**
-2. ✅ **Signature Block Lock-Out Validator**
-3. ✅ **Attorney Review Requirement Validator**
-4. ✅ **Template Safety Validator** (safe fields only)
+1. ✅ **Required Fields Validator** (statute of limitations, venue, jurisdiction)
+2. ✅ **Document Completeness Validator** (all required sections present)
+3. ✅ **Attorney Review Requirement Validator** (attorney must review before filing)
+4. ✅ **Citation Presence Validator** (citations present if required)
 
 **Why Universal:**
 - These are Bar compliance requirements that apply to ALL legal documents
-- No exceptions - every document must have watermark, blank signature, attorney review
+- No exceptions - every document must have required fields, completeness check, attorney review
 
 ---
 
@@ -493,69 +496,142 @@ Jurisdiction Validators (Maricopa County, AZ):
   ✅ AZ filing fee requirements
 ```
 
-### **Document Generation Workflow**
+### **Client-Side Validation Workflow**
 
-1. **Template Selection**
-   - Attorney selects template from approved library
+**Primary Workflow (Compliance Validation):**
+
+1. **Attorney Completes Document**
+   - Attorney completes document locally (Word, PDF, etc.)
+   - Document stays on attorney's device (never uploaded to TrueVow)
+   - Attorney opens DRAFT validation tool (browser extension/desktop app/Word add-in)
+
+2. **Validation Rules Sync**
+   - Validation rules synced from DRAFT service (encrypted, one-time or periodic)
+   - Rules stored locally on attorney's device
    - System identifies: Practice Area, Specialization, Document Type, Jurisdiction
    - System loads applicable validators (Levels 1-5)
-   - System validates template is attorney-provided
-   - System checks template for required watermark
 
-2. **Data Input**
-   - Attorney provides safe fields only (name, date, venue)
-   - System validates field safety (Level 1)
-   - System validates practice area requirements (Level 2)
-   - System validates specialization requirements (Level 3)
-   - System blocks unsafe field inputs
+3. **Client-Side Validation**
+   - Document content extracted locally (in browser/app memory)
+   - Validation engine runs locally (on attorney's device)
+   - All 5 levels of validators applied:
+     - ✅ **Level 1:** Required fields present, document complete
+     - ✅ **Level 2:** Practice area requirements met
+     - ✅ **Level 3:** Specialization requirements met
+     - ✅ **Level 4:** Document type requirements met
+     - ✅ **Level 5:** Jurisdiction/court requirements met
+   - Document content processed in memory only (ephemeral)
+   - Document content never sent to TrueVow servers
 
-3. **Document Assembly**
-   - System populates template with safe fields
-   - System adds mandatory watermark (Level 1)
-   - System adds signature block (with blank signature line) (Level 1)
-   - System adds placeholders for local rule requirements (Level 5)
-   - System applies practice area-specific content (Level 2)
-   - System applies specialization-specific content (Level 3)
-   - System applies document type-specific formatting (Level 4)
+4. **Validation Results Display**
+   - Results shown locally (red/yellow/green flags)
+   - Missing fields list displayed
+   - Compliance issues flagged
+   - Results never sent to TrueVow (zero-knowledge maintained)
 
-4. **Validation Checks (All Levels)**
-   - ✅ **Level 1:** Watermark present, signature line blank, safe fields only
-   - ✅ **Level 2:** Practice area requirements met
-   - ✅ **Level 3:** Specialization requirements met
-   - ✅ **Level 4:** Document type requirements met
-   - ✅ **Level 5:** Jurisdiction/court requirements met
-   - ✅ Placeholders identified
-   - ✅ Citation warnings displayed
+5. **Attorney Review & Fix**
+   - Attorney reviews validation results locally
+   - Attorney fixes issues in document
+   - Attorney re-validates if needed
+   - Attorney files document when validation passes
 
-5. **Document Export**
-   - Document marked as "DRAFT"
-   - Review workflow initiated
-   - Certification required before finalization
-   - Validation report generated (showing all levels checked)
+**Optional Workflow (Template Assembly - Supporting Service):**
+
+1. **Template Selection**
+   - Attorney selects template from library
+   - Attorney manually enters all data (from consultation notes)
+   - DRAFT assembles document (ephemeral processing, not stored)
+
+2. **Document Assembly (Ephemeral)**
+   - System populates template with attorney-provided data
+   - Document assembled in memory only
+   - Document returned to attorney
+   - Memory cleared immediately (no storage)
+
+3. **Attorney Completes & Validates**
+   - Attorney reviews and edits assembled document
+   - Attorney completes document
+   - Attorney validates using client-side validation (primary workflow above)
 
 ---
 
 ### **Database Schema (Proposed - Hierarchical Validators)**
 
+**⚠️ CRITICAL: NO DOCUMENT CONTENT STORED**
+
 ```sql
--- Document drafts table
-CREATE TABLE draft_documents (
+-- Validation rules table (stores validation rules, NOT document content)
+CREATE TABLE draft_validation_rules (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    tenant_id UUID NOT NULL,
-    template_id UUID NOT NULL,
     
     -- Hierarchical identifiers
-    practice_area TEXT NOT NULL,  -- 'personal_injury', 'family_law', etc.
-    specialization TEXT,  -- 'car_accident', 'divorce', etc. (nullable if not applicable)
-    document_type TEXT NOT NULL,  -- 'demand_letter', 'pleading', 'contract', etc.
-    jurisdiction_state TEXT NOT NULL,  -- 'AZ', 'CA', 'FL', etc.
-    jurisdiction_county TEXT,  -- 'Maricopa', 'Los Angeles', etc. (nullable)
-    court_name TEXT,  -- 'Superior Court', 'District Court', etc. (nullable)
+    validator_level TEXT NOT NULL,  -- 'universal', 'practice_area', 'specialization', 'document_type', 'jurisdiction'
+    practice_area TEXT,  -- nullable (only for practice_area level and below)
+    specialization TEXT,  -- nullable (only for specialization level and below)
+    document_type TEXT,  -- nullable (only for document_type level and below)
+    jurisdiction_state TEXT,  -- nullable (only for jurisdiction level)
+    jurisdiction_county TEXT,  -- nullable (only for jurisdiction level)
+    court_name TEXT,  -- nullable (only for jurisdiction level)
     
-    -- Content
-    content TEXT NOT NULL,
-    watermark_applied BOOLEAN DEFAULT FALSE,
-    signature_line_blank BOOLEAN DEFAULT TRUE,
+    -- Validator configuration
+    validator_name TEXT NOT NULL,  -- 'statute_of_limitations', 'local_rule_11.2', etc.
+    validator_type TEXT NOT NULL,  -- 'check', 'warning', 'blocking', 'requirement'
+    validator_config JSONB NOT NULL,  -- validator-specific configuration
+    error_message TEXT,  -- error message if validation fails
+    warning_message TEXT,  -- warning message if validation passes but warning needed
+    
+    -- Status
+    status TEXT DEFAULT 'active',  -- 'active', 'archived'
+    priority INTEGER DEFAULT 0,  -- Higher priority validators run first
+    
+    -- Metadata
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Usage analytics table (NO document content, only metadata)
+CREATE TABLE draft_validation_analytics (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    tenant_id UUID NOT NULL,
+    
+    -- Document metadata (NOT content)
+    document_type TEXT NOT NULL,  -- 'demand_letter', 'pleading', etc.
+    practice_area TEXT NOT NULL,
+    specialization TEXT,
+    jurisdiction_state TEXT NOT NULL,
+    jurisdiction_county TEXT,
+    
+    -- Validation results (NOT document content)
+    validation_status TEXT NOT NULL,  -- 'passed', 'failed', 'warnings'
+    missing_fields TEXT[],  -- List of missing fields (not field values)
+    validation_errors TEXT[],  -- List of errors (not document content)
+    validation_warnings TEXT[],  -- List of warnings (not document content)
+    
+    -- Metadata
+    validated_at TIMESTAMPTZ DEFAULT now(),
+    validation_duration_ms INTEGER  -- Performance tracking
+);
+
+-- Templates table (attorney's work product, NOT client data)
+CREATE TABLE draft_templates (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    tenant_id UUID NOT NULL,
+    
+    -- Template metadata
+    template_name TEXT NOT NULL,
+    practice_area TEXT NOT NULL,
+    document_type TEXT NOT NULL,
+    
+    -- Template content (attorney's work product, not client data)
+    template_content TEXT NOT NULL,  -- Template with placeholders
+    safe_fields TEXT[] NOT NULL,  -- List of safe fields allowed
+    
+    -- Status
+    status TEXT DEFAULT 'active',
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- NOTE: NO table for document content - documents never stored!
     
     -- Validation status (all levels)
     validation_status TEXT DEFAULT 'pending',  -- 'pending', 'passed', 'failed'
@@ -789,18 +865,29 @@ Add DRAFT usage to your next malpractice insurance application or renewal. Carri
 
 ## 📝 **SUMMARY**
 
-The TrueVow DRAFT™ Compliance Validator Module includes **6 core validators**:
+The TrueVow DRAFT™ Compliance Validator Service provides **client-side validation** with a **5-level hierarchical validator system**:
 
-1. **Mandatory "DRAFT ONLY" Watermark Validator** - Ensures every document includes compliance watermark
-2. **Signature Block Lock-Out Validator** - Forces attorney review before signing
-3. **Citation Audit Requirement Validator** - Warns about citation limitations
-4. **Local Rule Overlay Validator** - Identifies placeholder fields requiring replacement
-5. **Template Safety Validator** - Ensures only safe fields are populated
-6. **Attorney Review Requirement Validator** - Tracks review and certification workflow
+**Primary Service: Compliance Validation (Client-Side)**
+- ✅ Document validated locally on attorney's device (never uploaded)
+- ✅ Zero-knowledge architecture (TrueVow never sees document content)
+- ✅ Validation rules synced to device (encrypted)
+- ✅ Results shown locally (never sent to TrueVow)
+
+**5-Level Hierarchical Validator System:**
+1. **Level 1: Universal Validators** - Required fields, document completeness, attorney review
+2. **Level 2: Practice Area Validators** - Practice area-specific requirements (statute of limitations, HIPAA, etc.)
+3. **Level 3: Specialization Validators** - Specialization-specific requirements (PIP coverage, expert witnesses, etc.)
+4. **Level 4: Document Type Validators** - Document type-specific requirements (formatting, deadlines, citations)
+5. **Level 5: Jurisdiction/Court Validators** - State, county, court-specific rules
+
+**Optional Supporting Service: Template Assembly**
+- ✅ Template-based document assembly (ephemeral processing, not stored)
+- ✅ Attorney manually enters all data (from consultation)
+- ✅ Document assembled in memory only (never stored)
 
 **Compliance Status:** ✅ All validators designed to meet ABA Model Rules 1.1 and 5.5
 
-**Critical Requirement:** Attorney must review, edit, and certify every document before filing or sending.
+**Critical Requirement:** Zero-knowledge architecture - documents must never be uploaded to TrueVow servers. All validation runs client-side.
 
 ---
 
