@@ -1,0 +1,17 @@
+
+-- Employment employment_discrimination rule for MI
+-- Generated: 2026-03-05T02:18:18.589648+00:00
+
+INSERT INTO leverage.validation_rules (
+    rule_name, validator_level, validator_name, validator_type, practice_area,
+    specialization, document_type, jurisdiction_scope, jurisdiction_state,
+    validator_config, severity, review_status, is_active, is_template, created_at, updated_at
+) VALUES (
+    'MI-EMPLOYMENT-EMPLOYMENT-DISCRIMINATION', 5, 'MI Employment - Employment Discrimination', 'content_check', 'employment',
+    'employment_discrimination', 'general', 'state', 'MI',
+    '{"state_agency": "MDCR", "state_law_name": "Michigan Elliott-Larsen Civil Rights Act", "statutory_citation": "MCL 37.2202", "authority_level": "hard_rule"}'::jsonb, 'error', 'needs_review', true, false, NOW(), NOW()
+)
+ON CONFLICT (rule_name) DO UPDATE SET
+    validator_config   = EXCLUDED.validator_config,
+    review_status      = CASE WHEN leverage.validation_rules.review_status = 'document_verified' THEN 'document_verified' ELSE EXCLUDED.review_status END,
+    updated_at         = NOW();

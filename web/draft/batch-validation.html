@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrueVow DRAFT™ - Batch Validation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TrueVow DRAFT™</h1>
+            <p class="subtitle">Batch Document Validation</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab" onclick="window.location.href='index.html'">Single Validation</button>
+            <button class="tab active">Batch Validation</button>
+            <button class="tab" onclick="window.location.href='index.html#history'">History</button>
+        </nav>
+
+        <main>
+            <section id="batch-validate" class="tab-content active">
+                <div class="card">
+                    <h2>Batch Document Validation</h2>
+                    <p>Validate multiple documents at once (up to 100 documents)</p>
+                    
+                    <div class="form-group">
+                        <label for="documentType">Document Type *</label>
+                        <select id="documentType" required>
+                            <option value="">Select...</option>
+                            <option value="demand_letter">Demand Letter</option>
+                            <option value="motion">Motion</option>
+                            <option value="brief">Brief</option>
+                            <option value="contract">Contract</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jurisdiction">Jurisdiction</label>
+                        <input type="text" id="jurisdiction" placeholder="e.g., arizona">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="practiceArea">Practice Area</label>
+                        <input type="text" id="practiceArea" placeholder="e.g., personal_injury">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Documents *</label>
+                        <div id="documentsList" class="documents-list">
+                            <div class="document-item">
+                                <textarea 
+                                    class="document-text" 
+                                    placeholder="Paste document text here..."
+                                    rows="10"
+                                ></textarea>
+                                <button class="btn-remove" onclick="removeDocument(this)">Remove</button>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" onclick="addDocument()">+ Add Document</button>
+                        <p class="help-text">Maximum 100 documents per batch</p>
+                    </div>
+
+                    <button id="validateBatchBtn" class="btn-primary" onclick="validateBatch()">
+                        Validate Batch
+                    </button>
+                </div>
+
+                <div id="batchResults" class="card" style="display: none;">
+                    <h2>Batch Validation Results</h2>
+                    <div id="batchSummary"></div>
+                    <div id="batchResultsList"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="draft-client.js"></script>
+    <script>
+        // DRAFT API Configuration
+        const DRAFT_API_CONFIG = {
+            apiUrl: process.env.DRAFT_API_URL || window.DRAFT_API_URL || 'https://draft.truevow.law',
+            getApiKey: function() {
+                if (typeof getTenantDraftApiKey === 'function') {
+                    return getTenantDraftApiKey();
+                }
+                if (window.DRAFT_API_KEY) {
+                    return window.DRAFT_API_KEY;
+                }
+                if (typeof localStorage !== 'undefined') {
+                    return localStorage.getItem('draft_api_key');
+                }
+                return '';
+            },
+            getTenantId: function() {
+                if (typeof getTenantId === 'function') {
+                    return getTenantId();
+                }
+                if (window.TENANT_ID) {
+                    return window.TENANT_ID;
+                }
+                if (typeof localStorage !== 'undefined') {
+                    return localStorage.getItem('tenant_id');
+                }
+                return 'default';
+            }
+        };
+
+        const draftClient = new DraftClient({
+            apiUrl: DRAFT_API_CONFIG.apiUrl,
+            apiKey: DRAFT_API_CONFIG.getApiKey()
+        });
+
+        let documentCount = 1;
+
+        function addDocument() {
+            if (documentCount >= 100) {
+                alert('Maximum 100 documents per batch');
+                return;
+            }
+
+            const documentsList = document.getElementById('documentsList');
+            const newDoc = document.createElement('div');
+            newDoc.className = 'document-item';
+            newDoc.innerHTML = `
+                <textarea 
+                    class="document-text" 
+                    placeholder="Paste document text here..."
+                    rows="10"
+                ></textarea>
+                <button class="btn-remove" onclick="removeDocument(this)">Remove</button>
+            `;
+            documentsList.appendChild(newDoc);
+            documentCount++;
+        }
+
+        function removeDocument(btn) {
+            if (documentCount <= 1) {
+                alert('At least one document is required');
+                return;
+            }
+            btn.parentElement.remove();
+            documentCount--;
+        }
+
+        async function validateBatch() {
+            const validateBtn = document.getElementById('validateBatchBtn');
+            const documentType = document.getElementById('documentType').value;
+            const jurisdiction = document.getElementById('jurisdiction').value;
+            const practiceArea = document.getElementById('practiceArea').value;
+
+            if (!documentType) {
+                alert('Please select a document type');
+                return;
+            }
+
+            // Collect all document texts
+            const documentTexts = Array.from(document.querySelectorAll('.document-text'))
+                .map(textarea => textarea.value.trim())
+                .filter(text => text.length > 0);
+
+            if (documentTexts.length === 0) {
+                alert('Please enter at least one document');
+                return;
+            }
+
+            if (documentTexts.length > 100) {
+                alert('Maximum 100 documents per batch');
+                return;
+            }
+
+            validateBtn.disabled = true;
+            validateBtn.textContent = 'Validating...';
+
+            try {
+                const url = `${DRAFT_API_CONFIG.apiUrl}/api/v1/validation/validate-batch`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DRAFT_API_CONFIG.getApiKey()}`,
+                        'X-API-Key': DRAFT_API_CONFIG.getApiKey()
+                    },
+                    body: JSON.stringify({
+                        tenant_id: DRAFT_API_CONFIG.getTenantId(),
+                        document_type: documentType,
+                        jurisdiction: jurisdiction || undefined,
+                        practice_area: practiceArea || undefined,
+                        documents: documentTexts
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({ detail: response.statusText }));
+                    throw new Error(error.detail || `HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+                displayBatchResults(result);
+
+            } catch (error) {
+                console.error('Batch validation error:', error);
+                alert(`Batch validation failed: ${error.message}`);
+            } finally {
+                validateBtn.disabled = false;
+                validateBtn.textContent = 'Validate Batch';
+            }
+        }
+
+        function displayBatchResults(result) {
+            const resultsDiv = document.getElementById('batchResults');
+            const summaryDiv = document.getElementById('batchSummary');
+            const resultsListDiv = document.getElementById('batchResultsList');
+
+            // Summary
+            summaryDiv.innerHTML = `
+                <div class="batch-summary">
+                    <div class="summary-item">
+                        <strong>Total Documents:</strong> ${result.total_documents}
+                    </div>
+                    <div class="summary-item">
+                        <strong>Passed:</strong> <span class="text-success">${result.passed_count}</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Failed:</strong> <span class="text-error">${result.failed_count}</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Success Rate:</strong> ${result.summary.overall_success_rate}%
+                    </div>
+                    <div class="summary-item">
+                        <strong>Total Time:</strong> ${result.total_validation_duration_ms}ms
+                    </div>
+                    <div class="summary-item">
+                        <strong>Avg Time per Document:</strong> ${result.summary.average_validation_time_ms}ms
+                    </div>
+                </div>
+            `;
+
+            // Individual Results
+            resultsListDiv.innerHTML = result.results.map((item, index) => `
+                <div class="batch-result-item ${item.validation_passed ? 'passed' : 'failed'}">
+                    <h3>Document ${item.document_index + 1}</h3>
+                    <div class="result-status">
+                        ${item.validation_passed ? 
+                            '<span class="badge-success">✓ Passed</span>' : 
+                            '<span class="badge-error">✗ Failed</span>'
+                        }
+                        <span>Rules Checked: ${item.total_rules_checked}</span>
+                        <span>Time: ${item.validation_duration_ms}ms</span>
+                    </div>
+                    ${item.errors.length > 0 ? `
+                        <div class="errors-list">
+                            <h4>Errors (${item.errors_count})</h4>
+                            ${item.errors.map(err => `
+                                <div class="error-item">
+                                    <strong>${err.rule_name || 'Error'}</strong>
+                                    <p>${err.message || err.error_message || 'Validation error'}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    ${item.warnings.length > 0 ? `
+                        <div class="warnings-list">
+                            <h4>Warnings (${item.warnings_count})</h4>
+                            ${item.warnings.map(warn => `
+                                <div class="warning-item">
+                                    <strong>${warn.rule_name || 'Warning'}</strong>
+                                    <p>${warn.message || warn.warning_message || 'Validation warning'}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+    <style>
+        .documents-list {
+            margin: 1rem 0;
+        }
+        .document-item {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .document-text {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .btn-remove {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .batch-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .summary-item {
+            padding: 0.5rem;
+        }
+        .batch-result-item {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .batch-result-item.passed {
+            border-left: 4px solid #28a745;
+        }
+        .batch-result-item.failed {
+            border-left: 4px solid #dc3545;
+        }
+        .result-status {
+            display: flex;
+            gap: 1rem;
+            margin: 0.5rem 0;
+        }
+        .badge-success {
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        .badge-error {
+            background: #dc3545;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        .text-success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .text-error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</body>
+</html>

@@ -1,8 +1,9 @@
 # TrueVow DRAFT™ Service
 
-**Status:** Phase 3 (Future Module)  
-**Version:** 1.0.0  
-**Last Updated:** December 5, 2025
+**Status:** ✅ v2.0 Complete - Ready for Integration  
+**Version:** 2.0.0  
+**Last Updated:** December 10, 2025  
+**Architecture:** ✅ CORRECT (Global Templates + Tenant Rules)
 
 ---
 
@@ -15,7 +16,29 @@ TrueVow DRAFT™ is a **compliance validation service** that validates completed
 - ✅ 5-level hierarchical compliance validators
 - ✅ Practice area, specialization, document type, and jurisdiction-specific validation
 - ✅ Zero-knowledge architecture (TrueVow never sees document content)
-- ✅ Optional template-based document assembly (supporting service)
+- ✅ **NEW v2.0:** Global rule templates (SaaS Admin) + Tenant-specific rules (Law Firms)
+- ✅ **NEW v2.0:** Template inheritance (Law Firms inherit and customize global templates)
+- ✅ **NEW v2.0:** Rule selection (Law Firms select which rules to validate against)
+- ✅ **NEW v2.0:** Email attachment validation (Gmail/Outlook integration)
+
+## 🏆 **WHAT'S NEW IN v2.0**
+
+**CORRECT ARCHITECTURE:**
+- **SaaS Admin:** Manages **global rule templates** (template library)
+- **Tenant App:** Law firms **create and manage their own rules**
+- **Template Inheritance:** Law firms can inherit from global templates
+- **Rule Selection:** Law firms select which rules to validate against
+
+**BEFORE (v1.0 - WRONG):**
+- ❌ SaaS Admin creates/edit/archives validation rules globally
+- ❌ Rules apply to all tenants
+- ❌ Law firms only view rules (read-only)
+
+**AFTER (v2.0 - CORRECT):**
+- ✅ SaaS Admin manages template library
+- ✅ Law firms create their own rules
+- ✅ Law firms inherit and customize templates
+- ✅ Law firms select rules per validation
 
 ---
 

@@ -1,0 +1,30 @@
+{
+  "name": "truevow-draft-word-addin",
+  "version": "1.0.0",
+  "description": "TrueVow DRAFT™ Word Add-In - Zero-knowledge legal document compliance validator",
+  "main": "taskpane.html",
+  "scripts": {
+    "start": "office-addin-dev-server --server local --prod false --port 3000",
+    "stop": "office-addin-dev-server stop",
+    "validate": "office-addin-manifest validate manifest.xml",
+    "sideload": "office-addin-debugging start manifest.xml desktop",
+    "unload": "office-addin-debugging stop manifest.xml desktop"
+  },
+  "keywords": [
+    "office-add-in",
+    "word-add-in",
+    "legal",
+    "compliance",
+    "validation"
+  ],
+  "author": "TrueVow",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "office-addin-cli": "^1.5.7",
+    "office-addin-debugging": "^5.0.14",
+    "office-addin-dev-server": "^2.0.4",
+    "office-addin-manifest": "^1.12.3"
+  }
+}
+

@@ -1,0 +1,7 @@
+{
+  "name": "truevow-draft-service",
+  "private": true,
+  "scripts": {
+    "typecheck": "python -m mypy app"
+  }
+}

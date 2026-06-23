@@ -1,0 +1,1108 @@
+{
+  "state": "california",
+  "templates": [
+    {
+      "template_name": "California Demand Letter (Personal Injury)",
+      "template_description": "California Bar-compliant demand letter format for personal injury cases. Includes California-specific requirements for statute of limitations (CCP § 335.1), demand amounts, and medical documentation.",
+      "template_category": "demand_letter",
+      "state": "california",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "California Statute of Limitations Section Required",
+          "rule_description": "California demand letters must reference statute of limitations (CCP § 335.1 - 2-year limit for personal injury)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Statute of Limitations",
+            "required": true,
+            "keywords": ["CCP § 335.1", "Code of Civil Procedure", "statute of limitations", "two years", "2 years"],
+            "error_message": "California demand letters must reference Statute of Limitations (CCP § 335.1)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Total Demand Amount Required",
+          "rule_description": "Demand letter must state a specific total dollar amount",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Total Demand Amount",
+            "pattern": "\\$[0-9,]+(\\.\\d{2})?",
+            "required": true,
+            "error_message": "Demand letter must state a specific dollar amount"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Client Full Name Required",
+          "rule_description": "Demand letter must include client's full legal name",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Client Name",
+            "pattern": "[A-Z][a-z]+ [A-Z][a-z]+",
+            "required": true,
+            "error_message": "Demand letter must include client's full name"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Date of Incident Required",
+          "rule_description": "Demand letter must include the date of the incident",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Date of Incident",
+            "pattern": "(0?[1-9]|1[0-2])/(0?[1-9]|[12][0-9]|3[01])/\\d{4}",
+            "required": true,
+            "error_message": "Demand letter must include date of incident"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Medical Specials Breakdown",
+          "rule_description": "California practice: detailed breakdown of medical specials (bills, treatment dates)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Medical Specials",
+            "required": true,
+            "keywords": ["medical specials", "medical expenses", "treatment", "bills"],
+            "error_message": "California demand letters should include detailed medical specials breakdown"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "General Damages Discussion",
+          "rule_description": "California practice: separate discussion of general damages (pain and suffering)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "General Damages",
+            "required": true,
+            "keywords": ["general damages", "pain and suffering", "emotional distress"],
+            "error_message": "California demand letters should discuss general damages separately"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Attorney Letterhead (State Bar Number)",
+          "rule_description": "California letterhead should include State Bar number",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "header_contains",
+            "required_pattern": "State Bar No\\.? \\d{6}",
+            "error_message": "California attorney letterhead should include State Bar number"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Policy Limits Demand (if applicable)",
+          "rule_description": "If demanding policy limits, must be clearly stated",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["policy limits"],
+            "required_statement": "demand policy limits",
+            "error_message": "If claiming policy limits, must be explicitly stated"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "California Insurance Code Compliance",
+          "rule_description": "Demand letter must comply with California Insurance Code requirements for bad faith claims",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Insurance Bad Faith",
+            "required": false,
+            "keywords": ["Insurance Code", "bad faith", "Civ. Code § 3294"],
+            "error_message": "Consider including Insurance Code bad faith discussion if applicable"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Comparative Fault Disclosure",
+          "rule_description": "California comparative fault percentages must be disclosed (Civ. Code § 1431.2)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Comparative Fault",
+            "required": false,
+            "keywords": ["comparative fault", "percentage", "Civ. Code § 1431.2"],
+            "error_message": "Consider disclosing client's comparative fault percentage if known"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Future Medical Expenses Calculation",
+          "rule_description": "Future medical expenses should be calculated using life care planner methodology",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Future Medical Expenses",
+            "required": false,
+            "keywords": ["life care plan", "future medical", "present value"],
+            "error_message": "Consider including future medical expense calculation if significant"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Loss of Consortium Claim",
+          "rule_description": "Include loss of consortium claim for spouse if applicable",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["spouse", "married"],
+            "required_statement": "loss of consortium",
+            "error_message": "Consider including loss of consortium claim if client is married"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Punitive Damages Basis",
+          "rule_description": "If punitive damages sought, must establish malice/oppression/fraud (Civ. Code § 3294)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["punitive", "exemplary"],
+            "required_statement": "malice oppression fraud",
+            "error_message": "Must establish clear basis for punitive damages under Civ. Code § 3294"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Demand Response Deadline",
+          "rule_description": "Specify response deadline (typically 30 days for California)",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Response Deadline",
+            "pattern": "(30|forty-five|45) days?",
+            "required": true,
+            "error_message": "Demand letter must specify response deadline (typically 30 days)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Mediation Requirement Notice",
+          "rule_description": "Notice that mediation may be required before litigation",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Mediation",
+            "required": false,
+            "keywords": ["mediation", "settlement conference"],
+            "error_message": "Consider noting mediation requirement under California law"
+          },
+          "severity": "info"
+        }
+      ]
+    },
+    {
+      "template_name": "California Complaint (Superior Court)",
+      "template_description": "California Superior Court complaint format following California Code of Civil Procedure",
+      "template_category": "complaint",
+      "state": "california",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Caption Format (California Superior Court)",
+          "rule_description": "Proper court caption format for California Superior Court",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "caption_format",
+            "required_elements": ["SUPERIOR COURT", "STATE OF CALIFORNIA", "COUNTY OF"],
+            "error_message": "Caption must follow California court format (CCP § 422.10)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Case Number Line",
+          "rule_description": "Case number line required in California complaints",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "contains_field",
+            "field_name": "Case No.",
+            "error_message": "California complaints must include 'Case No.' line in caption"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Parties Section Required",
+          "rule_description": "Complaint must identify all parties with addresses",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Parties",
+            "required": true,
+            "keywords": ["plaintiff", "defendant", "address"],
+            "error_message": "Complaint must identify parties with addresses (CCP § 425.10)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "General Allegations Section",
+          "rule_description": "California complaints typically include general allegations section",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "General Allegations",
+            "required": true,
+            "error_message": "California complaints should include general allegations section"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Causes of Action Separately Stated",
+          "rule_description": "Each cause of action must be separately stated (CCP § 425.10)",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "numbered_sections",
+            "section_pattern": "(FIRST|SECOND|THIRD|FOURTH|FIFTH) CAUSE OF ACTION",
+            "error_message": "Each cause of action must be separately stated (CCP § 425.10)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Prayer for Relief Required",
+          "rule_description": "Complaint must include prayer for relief with specific damages",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Prayer for Relief",
+            "required": true,
+            "keywords": ["prayer", "wherefore", "demands judgment"],
+            "error_message": "Complaint must include prayer for relief (CCP § 425.10)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Demand for Jury Trial",
+          "rule_description": "If jury trial demanded, must be clearly stated",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "optional_section",
+            "section_name": "Demand for Jury Trial",
+            "keywords": ["jury trial", "demand jury"],
+            "error_message": "If demanding jury trial, include separate demand section"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Venue Statement Required",
+          "rule_description": "Complaint must include proper venue statement (CCP § 395)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Venue",
+            "required": true,
+            "keywords": ["venue", "proper venue", "county"],
+            "error_message": "Complaint must include venue statement (CCP § 395)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Monetary Damages Statement",
+          "rule_description": "Must specify amount of monetary damages sought (CCP § 425.10(d))",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Amount of Damages",
+            "pattern": "\\$(unspecified|[0-9,]+)",
+            "required": true,
+            "error_message": "Must specify amount of monetary damages sought (CCP § 425.10(d))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Service Address for Each Defendant",
+          "rule_description": "Must include service address for each defendant (CCP § 412.20)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Service Addresses",
+            "required": true,
+            "keywords": ["serve", "service address", "last known address"],
+            "error_message": "Must include service address for each defendant (CCP § 412.20)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Attorney Signature Block Required",
+          "rule_description": "Complaint must include attorney signature block with State Bar number",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "signature_block",
+            "required_elements": ["Attorney for Plaintiff", "State Bar No", "Bar Number"],
+            "error_message": "Complaint must include attorney signature block with State Bar number"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Verification Requirement (if applicable)",
+          "rule_description": "Certain allegations require verification under penalty of perjury",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["damages exceed", "special damages", "particular damage"],
+            "required_statement": "verified",
+            "error_message": "Allegations of special/particular damages require verification (CCP § 446)"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Attachment References",
+          "rule_description": "All attachments must be referenced in the complaint",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Exhibits",
+            "error_message": "All attachments must be referenced in the complaint"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Demurrer Response Deadline",
+          "rule_description": "Complaint should anticipate demurrer response timeframe",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Demurrer Response",
+            "required": false,
+            "keywords": ["demurrer", "30 days", "responsive pleading"],
+            "error_message": "Consider including anticipated demurrer response timeframe"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Alternative Dispute Resolution Notice",
+          "rule_description": "Must include ADR notice as required by California law",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "ADR Notice",
+            "required": true,
+            "keywords": ["alternative dispute resolution", "mediation", "settlement"],
+            "error_message": "Must include ADR notice (California Rules of Court 3.850-3.858)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Electronic Service Consent",
+          "rule_description": "Include consent to electronic service if applicable",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "optional_section",
+            "section_name": "Electronic Service",
+            "keywords": ["electronic service", "email service"],
+            "error_message": "Consider including consent to electronic service if agreed"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Fee Waiver Request (if applicable)",
+          "rule_description": "Include fee waiver documentation if filing fee cannot be paid",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["fee waiver", "cannot afford", "indigent"],
+            "required_statement": "Form FW-001",
+            "error_message": "Fee waiver request requires Form FW-001 and supporting documentation"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Confidentiality Statement (if applicable)",
+          "rule_description": "Include confidentiality statement for sealed portions if applicable",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["confidential", "sealed", "under seal"],
+            "required_statement": "confidentiality",
+            "error_message": "Sealed portions require confidentiality statement per CRC 3.1300"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Related Case Statement",
+          "rule_description": "Disclose any related cases (CRC 3.1105)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Related Cases",
+            "required": false,
+            "keywords": ["related case", "prior case", "same parties"],
+            "error_message": "Consider disclosing any related cases (CRC 3.1105)"
+          },
+          "severity": "info"
+        }
+      ]
+    },
+    {
+      "template_name": "California Motion for Summary Judgment",
+      "template_description": "Motion for summary judgment under California Code of Civil Procedure § 437c",
+      "template_category": "motion",
+      "state": "california",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Notice of Motion Format",
+          "rule_description": "Notice must follow California format requirements",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "NOTICE OF MOTION",
+            "required": true,
+            "error_message": "Motion must include proper Notice of Motion (CCP § 437c)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Separate Statement Required",
+          "rule_description": "Separate statement of undisputed facts required (CCP § 437c(b)(1))",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Separate Statement",
+            "required": true,
+            "error_message": "Separate Statement of Undisputed Material Facts required (CCP § 437c(b)(1))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Evidence Referenced",
+          "rule_description": "Motion must reference supporting evidence",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "content_exists",
+            "required_content": ["Declaration of", "Exhibit", "Deposition"],
+            "error_message": "Motion must reference supporting evidence (CCP § 437c(b))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Proposed Order Included",
+          "rule_description": "Proposed order should be included",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Proposed Order",
+            "error_message": "Motion should include proposed order"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Meet and Confer Certification Required",
+          "rule_description": "Must certify compliance with meet and confer requirements (CRC 3.1300)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Meet and Confer Certification",
+            "required": true,
+            "keywords": ["meet and confer", "CRC 3.1300", "discussed in good faith"],
+            "error_message": "Must include meet and confer certification (CRC 3.1300)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Notice of Lodging Required",
+          "rule_description": "Notice of lodging required for proposed orders (CRC 3.1113)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Notice of Lodging",
+            "error_message": "Notice of lodging required for proposed orders (CRC 3.1113)"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Evidence Authentication",
+          "rule_description": "All evidence must be properly authenticated (Evid. Code § 1400 et seq.)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "content_exists",
+            "required_content": ["authenticated", "foundation laid", "Evid. Code"],
+            "error_message": "Evidence must be properly authenticated (Evid. Code § 1400 et seq.)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Moving Party Burden Statement",
+          "rule_description": "Must state moving party's burden and that there is no triable issue (CCP § 437c(p)(1))",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Burden Statement",
+            "required": true,
+            "keywords": ["no triable issue", "entitled to judgment", "burden"],
+            "error_message": "Must state moving party's burden and no triable issue (CCP § 437c(p)(1))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Opposition Deadline Calculation",
+          "rule_description": "Must correctly calculate opposition deadline (CRC 3.1306)",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "deadline_calculation",
+            "days_required": 15,
+            "error_message": "Opposition deadline must be 15 days before hearing (CRC 3.1306)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Hearing Date Properly Set",
+          "rule_description": "Hearing date must comply with summary judgment timing requirements",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "hearing_date",
+            "minimum_days": 30,
+            "maximum_days": 75,
+            "error_message": "Hearing date must be 30-75 days after service (CRC 3.1308)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Supporting Declaration Format",
+          "rule_description": "Declarations must comply with format requirements (CRC 3.1200)",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "declaration_format",
+            "required_elements": ["declarant signature", "date", "based on personal knowledge"],
+            "error_message": "Declarations must comply with format requirements (CRC 3.1200)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Request for Judicial Notice (if applicable)",
+          "rule_description": "Include request for judicial notice for matters properly noticed",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["judicially noticeable", "court may take notice"],
+            "required_statement": "Request for Judicial Notice",
+            "error_message": "Include Request for Judicial Notice (Evid. Code § 452)"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Evidence Code Section Citations",
+          "rule_description": "Cite specific Evidence Code sections for admissibility arguments",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "citation_exists",
+            "required_citations": ["Evid. Code §", "Evidence Code"],
+            "error_message": "Cite specific Evidence Code sections for admissibility arguments"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Appendix of Undisputed Facts",
+          "rule_description": "Include appendix of undisputed facts in proper format",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Appendix of Undisputed Facts",
+            "error_message": "Include appendix of undisputed facts in proper format"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Concise Statement of Issues",
+          "rule_description": "Include concise statement of issues to be decided (CRC 3.1600)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Statement of Issues",
+            "required": true,
+            "keywords": ["issues to be decided", "material facts"],
+            "error_message": "Include concise statement of issues to be decided (CRC 3.1600)"
+          },
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "template_name": "California Discovery Requests (PI Cases)",
+      "template_description": "California discovery requests including interrogatories, requests for production, and requests for admission for personal injury cases",
+      "template_category": "discovery",
+      "state": "california",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Interrogatory Format Compliance",
+          "rule_description": "Interrogatories must follow California format requirements (CCP § 2030.010)",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "numbered_questions",
+            "max_questions": 35,
+            "error_message": "Interrogatories limited to 35 questions (CCP § 2030.040)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Requests for Production Format",
+          "rule_description": "Requests for production must specify items with reasonable particularity (CCP § 2031.010)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Items Requested",
+            "required": true,
+            "keywords": ["produce", "within your possession", "particularity"],
+            "error_message": "Requests must specify items with reasonable particularity (CCP § 2031.060)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Requests for Admission Format",
+          "rule_description": "Requests for admission must be clear and unambiguous (CCP § 2033.010)",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "numbered_statements",
+            "max_requests": 35,
+            "error_message": "Requests for admission limited to 35 requests (CCP § 2033.040)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Discovery Scope Statement",
+          "rule_description": "Must include statement of relevant subject matter (CCP § 2017.010)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Scope of Discovery",
+            "required": true,
+            "keywords": ["relevant to", "subject matter", "reasonably calculated"],
+            "error_message": "Must include scope statement (CCP § 2017.010)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Response Deadlines Specified",
+          "rule_description": "Must specify proper response deadlines (CCP § 2030.210, 2031.210, 2033.220)",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Response Deadline",
+            "pattern": "(30|forty-five|45) days?",
+            "required": true,
+            "error_message": "Must specify 30-day response deadline (CCP §§ 2030.210, 2031.210, 2033.220)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Privilege Instructions Included",
+          "rule_description": "Must include privilege instructions for responding party",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Privilege Instructions",
+            "required": true,
+            "keywords": ["privilege", "attorney-client", "work product"],
+            "error_message": "Must include privilege instructions for responding party"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Form Interrogatory References",
+          "rule_description": "May incorporate form interrogatories by reference",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "optional_section",
+            "section_name": "Form Interrogatories",
+            "keywords": ["form interrogatory", "incorporate", "reference"],
+            "error_message": "Consider incorporating form interrogatories by reference if applicable"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Medical Authorization Requests",
+          "rule_description": "Include medical authorization for treating physicians",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Medical Authorization",
+            "error_message": "Include medical authorization for treating physicians"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Subpoena Duces Tecum Format",
+          "rule_description": "Subpoenas must follow proper format and service requirements",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "subpoena_format",
+            "required_elements": ["command to appear", "time and place", "penalty for non-compliance"],
+            "error_message": "Subpoenas must follow proper format and service requirements"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Meet and Confer Certification for Discovery",
+          "rule_description": "Certify compliance with meet and confer requirements (CRC 3.1300)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Meet and Confer Certification",
+            "required": true,
+            "keywords": ["meet and confer", "discussed in good faith", "CRC 3.1300"],
+            "error_message": "Must certify compliance with meet and confer requirements (CRC 3.1300)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Costs and Fees Statement",
+          "rule_description": "Include statement about costs and fees for production",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Costs and Fees",
+            "required": false,
+            "keywords": ["costs", "fees", "reimbursement"],
+            "error_message": "Consider including statement about costs and fees for production"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Electronic Discovery Proportionality",
+          "rule_description": "Address proportionality for electronic discovery (CRC 3.1310)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["electronically stored", "ESI", "digital"],
+            "required_statement": "proportionality",
+            "error_message": "Address proportionality for electronic discovery (CRC 3.1310)"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Foreign Language Document Translation",
+          "rule_description": "Specify translation requirements for foreign language documents",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["foreign language", "translation"],
+            "required_statement": "translation certified",
+            "error_message": "Specify translation requirements for foreign language documents"
+          },
+          "severity": "info"
+        }
+      ]
+    },
+    {
+      "template_name": "California Settlement Agreement (PI Cases)",
+      "template_description": "California settlement agreement format for personal injury cases with proper release language and terms",
+      "template_category": "settlement",
+      "state": "california",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Release Language Specificity",
+          "rule_description": "Release must specifically identify released claims (Civ. Code § 1542)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Released Claims",
+            "required": true,
+            "keywords": ["release", "known and unknown", "Civ. Code § 1542"],
+            "error_message": "Release must specifically identify released claims (Civ. Code § 1542)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Consideration Amount Specified",
+          "rule_description": "Settlement consideration amount must be clearly stated",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Settlement Amount",
+            "pattern": "\\$[0-9,]+(\\.\\d{2})?",
+            "required": true,
+            "error_message": "Settlement consideration amount must be clearly stated"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Payment Terms Detailed",
+          "rule_description": "Payment schedule and terms must be specifically detailed",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Payment Terms",
+            "required": true,
+            "keywords": ["payment", "installments", "due date", "interest"],
+            "error_message": "Payment schedule and terms must be specifically detailed"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Mutual Release Provisions",
+          "rule_description": "Include mutual release if applicable to both parties",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["mutual", "both parties"],
+            "required_statement": "mutual release",
+            "error_message": "Include mutual release provisions if applicable"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Confidentiality Clause Required",
+          "rule_description": "Settlement confidentiality terms must be clearly specified",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Confidentiality",
+            "required": true,
+            "keywords": ["confidential", "non-disclosure", "secrecy"],
+            "error_message": "Settlement confidentiality terms must be clearly specified"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "No Admission Clause",
+          "rule_description": "Include no admission of liability clause",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "No Admission",
+            "required": true,
+            "keywords": ["no admission", "without admitting", "denial of liability"],
+            "error_message": "Include no admission of liability clause"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Attorney Fee Allocation",
+          "rule_description": "Specify attorney fee allocation and lien satisfaction",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Attorney Fees",
+            "required": true,
+            "keywords": ["attorney fees", "lien", "costs"],
+            "error_message": "Specify attorney fee allocation and lien satisfaction"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Structured Settlement Provisions",
+          "rule_description": "Include structured settlement terms if applicable",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["structured settlement", "annuity", "periodic payments"],
+            "required_statement": "qualified assignment",
+            "error_message": "Include structured settlement terms and qualified assignment if applicable"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Tax Consequences Disclosure",
+          "rule_description": "Disclose potential tax consequences of settlement",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Tax Consequences",
+            "required": false,
+            "keywords": ["tax", "IRS", "1099", "compensation"],
+            "error_message": "Consider disclosing potential tax consequences of settlement"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Medicare Set-Aside Arrangement",
+          "rule_description": "Address Medicare Set-Aside if client is Medicare beneficiary",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["Medicare", "MSA", "beneficiary"],
+            "required_statement": "Medicare Set-Aside",
+            "error_message": "Address Medicare Set-Aside arrangement if client is Medicare beneficiary"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Future Medical Care Provisions",
+          "rule_description": "Specify arrangements for future medical care if applicable",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["future medical", "ongoing treatment"],
+            "required_statement": "medical care arrangement",
+            "error_message": "Specify arrangements for future medical care if applicable"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Dispute Resolution for Breach",
+          "rule_description": "Include dispute resolution procedure for settlement breach",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Breach Remedy",
+            "required": false,
+            "keywords": ["breach", "remedy", "arbitration", "mediation"],
+            "error_message": "Consider including dispute resolution procedure for settlement breach"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Governing Law Specification",
+          "rule_description": "Specify California law governs interpretation",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Governing Law",
+            "required": true,
+            "keywords": ["California law", "governed by", "interpreted under"],
+            "error_message": "Specify California law governs interpretation"
+          },
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "template_name": "California Medical Provider Lien Resolution",
+      "template_description": "California medical provider lien resolution and reduction procedures under Civ. Code § 3045",
+      "template_category": "lien_resolution",
+      "state": "california",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Lien Reduction Calculation Required",
+          "rule_description": "Calculate lien reduction based on comparative fault (Civ. Code § 3045)",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Lien Reduction Calculation",
+            "pattern": "([0-9]+%) reduction",
+            "required": true,
+            "error_message": "Calculate lien reduction based on comparative fault (Civ. Code § 3045)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Reasonable Value Determination",
+          "rule_description": "Determine reasonable value of medical services (Civ. Code § 3045.1)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Reasonable Value",
+            "required": true,
+            "keywords": ["reasonable value", "usual and customary", "fair market value"],
+            "error_message": "Determine reasonable value of medical services (Civ. Code § 3045.1)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Attorney Fee Deduction Calculation",
+          "rule_description": "Calculate attorney fee deduction from lien amount",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Attorney Fee Deduction",
+            "pattern": "\\$[0-9,]+(\\.\\d{2})?",
+            "required": true,
+            "error_message": "Calculate attorney fee deduction from lien amount"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Cost Deduction Specification",
+          "rule_description": "Specify litigation costs deductible from lien",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Cost Deductions",
+            "required": true,
+            "keywords": ["costs", "litigation expenses", "deductible"],
+            "error_message": "Specify litigation costs deductible from lien"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Lien Priority Statement",
+          "rule_description": "State lien priority in relation to other creditors",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Lien Priority",
+            "required": false,
+            "keywords": ["priority", "first lien", "superior"],
+            "error_message": "Consider stating lien priority in relation to other creditors"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Notice to Lienholder Required",
+          "rule_description": "Provide proper notice to medical lienholder (Civ. Code § 3045.4)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Lienholder Notice",
+            "required": true,
+            "keywords": ["notice", "Civ. Code § 3045.4", "30 days"],
+            "error_message": "Provide proper notice to medical lienholder (Civ. Code § 3045.4)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Lien Satisfaction Documentation",
+          "rule_description": "Include documentation for lien satisfaction upon payment",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Lien Satisfaction",
+            "error_message": "Include documentation for lien satisfaction upon payment"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Coordination of Benefits Analysis",
+          "rule_description": "Analyze coordination of benefits with insurance",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Coordination of Benefits",
+            "required": false,
+            "keywords": ["coordination", "insurance", "benefits"],
+            "error_message": "Consider analyzing coordination of benefits with insurance"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Medi-Cal Lien Considerations",
+          "rule_description": "Address Medi-Cal lien recovery if applicable (W&I Code § 14124.76)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["Medi-Cal", "Medicaid"],
+            "required_statement": "W&I Code § 14124.76",
+            "error_message": "Address Medi-Cal lien recovery requirements (W&I Code § 14124.76)"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "ERISA Plan Lien Handling",
+          "rule_description": "Address ERISA plan lien considerations if applicable",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "conditional_content",
+            "trigger_keywords": ["ERISA", "employee benefit"],
+            "required_statement": "ERISA preemption",
+            "error_message": "Address ERISA plan lien considerations if applicable"
+          },
+          "severity": "warning"
+        }
+      ]
+    }
+  ]
+}
+

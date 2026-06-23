@@ -1,0 +1,125 @@
+{
+  "state": "ohio",
+  "templates": [
+    {
+      "template_name": "Ohio Demand Letter (Personal Injury)",
+      "template_description": "Ohio-specific demand letter format for personal injury cases. [TO BE POPULATED: Add Ohio-specific statute of limitations, procedural requirements, and Bar compliance rules]",
+      "template_category": "demand_letter",
+      "state": "ohio",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Ohio Statute of Limitations Reference",
+          "rule_description": "[TO BE POPULATED: Research Ohio statute of limitations for personal injury cases]",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Statute of Limitations",
+            "required": true,
+            "keywords": [
+              "statute of limitations"
+            ],
+            "error_message": "[TO BE POPULATED: Add Ohio-specific SOL citation requirement]"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Total Demand Amount Required",
+          "rule_description": "Demand letter must state a specific total dollar amount",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Total Demand Amount",
+            "pattern": "\\$[0-9,]+(\\.\\d{2})?",
+            "required": true,
+            "error_message": "Demand letter must state a specific dollar amount"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Client Full Name Required",
+          "rule_description": "Demand letter must include client's full legal name",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Client Name",
+            "pattern": "[A-Z][a-z]+ [A-Z][a-z]+",
+            "required": true,
+            "error_message": "Demand letter must include client's full name"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Professional Letterhead Check",
+          "rule_description": "Professional letterhead required per Ohio Bar rules",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "header_exists",
+            "required": true,
+            "error_message": "[TO BE POPULATED: Add Ohio Bar letterhead requirements]"
+          },
+          "severity": "warning"
+        }
+      ]
+    },
+    {
+      "template_name": "Ohio Complaint (State Court)",
+      "template_description": "Ohio state court complaint format. [TO BE POPULATED: Add Ohio Rules of Civil Procedure requirements]",
+      "template_category": "complaint",
+      "state": "ohio",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Caption Format (Ohio State Court)",
+          "rule_description": "Proper court caption format for Ohio state courts",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "caption_format",
+            "required_elements": [
+              "STATE",
+              "COUNTY",
+              "COURT"
+            ],
+            "error_message": "[TO BE POPULATED: Add Ohio caption requirements]"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Parties Section Required",
+          "rule_description": "Complaint must identify all parties",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Parties",
+            "required": true,
+            "keywords": [
+              "plaintiff",
+              "defendant"
+            ],
+            "error_message": "Complaint must identify all parties"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Prayer for Relief Required",
+          "rule_description": "Complaint must include prayer for relief",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Prayer for Relief",
+            "required": true,
+            "keywords": [
+              "prayer",
+              "wherefore",
+              "demands"
+            ],
+            "error_message": "Complaint must include prayer for relief"
+          },
+          "severity": "error"
+        }
+      ]
+    }
+  ]
+}

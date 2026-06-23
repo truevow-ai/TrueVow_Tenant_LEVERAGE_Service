@@ -1,0 +1,267 @@
+{
+  "state": "texas",
+  "templates": [
+    {
+      "template_name": "Texas Demand Letter (Personal Injury)",
+      "template_description": "Texas Bar-compliant demand letter format for personal injury cases. Includes Texas-specific requirements for statute of limitations (CPRC § 16.003), demand amounts, and settlement negotiations.",
+      "template_category": "demand_letter",
+      "state": "texas",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Texas Statute of Limitations Reference",
+          "rule_description": "Texas demand letters should reference 2-year statute of limitations (CPRC § 16.003)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Statute of Limitations",
+            "required": true,
+            "keywords": ["CPRC § 16.003", "Civil Practice and Remedies Code", "statute of limitations", "two years", "2 years"],
+            "error_message": "Texas demand letters should reference statute of limitations (CPRC § 16.003)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Total Demand Amount Required",
+          "rule_description": "Demand letter must state specific settlement amount",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Settlement Demand",
+            "pattern": "\\$[0-9,]+(\\.\\d{2})?",
+            "required": true,
+            "error_message": "Demand letter must state specific settlement amount"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Client Information Required",
+          "rule_description": "Client's full name and contact information",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Client Name",
+            "pattern": "[A-Z][a-z]+ [A-Z][a-z]+",
+            "required": true,
+            "error_message": "Demand letter must include client's full name"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Date and Location of Incident",
+          "rule_description": "Specific date and location of incident required",
+          "rule_type": "required_field",
+          "rule_config": {
+            "field_name": "Incident Date and Location",
+            "required": true,
+            "error_message": "Must include specific date and location of incident"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Medical Treatment Summary",
+          "rule_description": "Texas practice: detailed medical treatment summary",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Medical Treatment",
+            "required": true,
+            "keywords": ["medical treatment", "medical expenses", "healthcare provider"],
+            "error_message": "Texas demand letters should include medical treatment summary"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Liability Section",
+          "rule_description": "Clear statement of liability and negligence",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Liability",
+            "required": true,
+            "keywords": ["liability", "negligence", "fault", "responsible"],
+            "error_message": "Demand letter should include liability section"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Attorney State Bar Number",
+          "rule_description": "Texas attorney should include State Bar number on letterhead",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "header_contains",
+            "required_pattern": "State Bar No\\.? \\d{8}",
+            "error_message": "Texas attorney letterhead should include State Bar number"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Response Deadline",
+          "rule_description": "Specify deadline for insurance company response",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_deadline",
+            "keywords": ["respond by", "deadline", "within", "days"],
+            "error_message": "Consider specifying response deadline for settlement demand"
+          },
+          "severity": "info"
+        }
+      ]
+    },
+    {
+      "template_name": "Texas Petition (District Court)",
+      "template_description": "Texas District Court petition format following Texas Rules of Civil Procedure",
+      "template_category": "petition",
+      "state": "texas",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Petition Title Format",
+          "rule_description": "Proper petition title for Texas District Court",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "caption_format",
+            "required_elements": ["DISTRICT COURT", "COUNTY, TEXAS", "JUDICIAL DISTRICT"],
+            "error_message": "Caption must include District Court, County, and Judicial District"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Discovery Control Plan Statement",
+          "rule_description": "Petition must state discovery control plan level (TRCP 190)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_statement",
+            "required_statement": "Discovery Control Plan",
+            "keywords": ["Level 1", "Level 2", "Level 3", "TRCP 190"],
+            "error_message": "Petition must state discovery control plan level (TRCP 190)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Parties Section Required",
+          "rule_description": "Petition must identify all parties",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Parties",
+            "required": true,
+            "keywords": ["plaintiff", "defendant"],
+            "error_message": "Petition must identify all parties (TRCP 47)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Factual Allegations",
+          "rule_description": "Petition must contain factual allegations",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Factual Background",
+            "required": true,
+            "error_message": "Petition must contain factual allegations (TRCP 47)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Claims Separately Stated",
+          "rule_description": "Each claim should be separately stated",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "numbered_sections",
+            "section_pattern": "CLAIM (ONE|TWO|THREE|\\d+)",
+            "error_message": "Claims should be separately stated and numbered"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Prayer for Relief Required",
+          "rule_description": "Petition must include prayer for relief",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Prayer",
+            "required": true,
+            "keywords": ["prayer", "wherefore", "plaintiff prays"],
+            "error_message": "Petition must include prayer for relief (TRCP 47)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Jury Demand",
+          "rule_description": "Jury demand must be included if requesting jury trial",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "optional_section",
+            "section_name": "Jury Demand",
+            "keywords": ["jury trial", "trial by jury"],
+            "error_message": "If requesting jury trial, include jury demand (TRCP 216)"
+          },
+          "severity": "warning"
+        }
+      ]
+    },
+    {
+      "template_name": "Texas Motion to Dismiss",
+      "template_description": "Motion to dismiss under Texas Rules of Civil Procedure",
+      "template_category": "motion",
+      "state": "texas",
+      "jurisdiction_type": "state",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Motion Title Format",
+          "rule_description": "Proper motion title format",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "title_exists",
+            "required_title": "MOTION TO DISMISS",
+            "error_message": "Motion must have proper title"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Grounds for Dismissal Stated",
+          "rule_description": "Motion must clearly state grounds for dismissal (TRCP 91a or CPRC § 27.003)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Grounds",
+            "required": true,
+            "keywords": ["TRCP 91a", "CPRC § 27.003", "no basis in law", "no basis in fact"],
+            "error_message": "Motion must state specific grounds for dismissal"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Supporting Authorities Cited",
+          "rule_description": "Motion should cite supporting case law or statutes",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_citations",
+            "citation_pattern": "\\d+ S\\.W\\.\\d+d|Tex\\. [A-Z]",
+            "error_message": "Motion should cite supporting legal authorities"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Prayer for Relief",
+          "rule_description": "Motion must include prayer for specific relief",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Prayer",
+            "required": true,
+            "keywords": ["prayer", "wherefore", "movant prays"],
+            "error_message": "Motion must include prayer for relief"
+          },
+          "severity": "error"
+        }
+      ]
+    }
+  ]
+}
+

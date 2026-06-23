@@ -1,0 +1,376 @@
+{
+  "state": null,
+  "jurisdiction_type": "federal",
+  "templates": [
+    {
+      "template_name": "Federal Complaint (Civil Rights - 42 U.S.C. § 1983)",
+      "template_description": "Federal court complaint format for civil rights cases under 42 U.S.C. § 1983, following Federal Rules of Civil Procedure",
+      "template_category": "complaint",
+      "state": null,
+      "jurisdiction_type": "federal",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Federal Court Caption Format",
+          "rule_description": "Proper caption format for federal district court",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "caption_format",
+            "required_elements": ["UNITED STATES DISTRICT COURT", "DISTRICT OF"],
+            "error_message": "Caption must include 'UNITED STATES DISTRICT COURT' and district name"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Jurisdiction Statement Required",
+          "rule_description": "Federal complaint must state basis for federal jurisdiction (FRCP 8(a))",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Jurisdiction",
+            "required": true,
+            "keywords": ["jurisdiction", "28 U.S.C. § 1331", "28 U.S.C. § 1343", "federal question"],
+            "error_message": "Complaint must include jurisdiction statement citing 28 U.S.C. § 1331 or § 1343 (FRCP 8(a))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Venue Statement Required",
+          "rule_description": "Federal complaint must state venue basis",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Venue",
+            "required": true,
+            "keywords": ["venue", "28 U.S.C. § 1391", "proper venue"],
+            "error_message": "Complaint must include venue statement (28 U.S.C. § 1391)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Parties Section Required",
+          "rule_description": "Complaint must identify all parties",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Parties",
+            "required": true,
+            "keywords": ["plaintiff", "defendant"],
+            "error_message": "Complaint must identify all parties (FRCP 8(a))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Section 1983 Citation",
+          "rule_description": "Civil rights complaint must cite 42 U.S.C. § 1983",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_citation",
+            "required_citation": "42 U.S.C. § 1983",
+            "error_message": "Civil rights complaint must cite 42 U.S.C. § 1983"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Constitutional Rights Alleged",
+          "rule_description": "Complaint must specify which constitutional rights were violated",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_keywords",
+            "keywords": ["First Amendment", "Fourth Amendment", "Fourteenth Amendment", "Due Process", "Equal Protection"],
+            "error_message": "Complaint must specify which constitutional rights were violated"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Under Color of State Law Allegation",
+          "rule_description": "Section 1983 complaint must allege actions under color of state law",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_phrase",
+            "required_phrase": "under color of state law",
+            "error_message": "Section 1983 complaint must allege defendants acted 'under color of state law'"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Claims Separately Stated",
+          "rule_description": "Each claim should be stated in a separate count (FRCP 10(b))",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "numbered_sections",
+            "section_pattern": "COUNT (I|II|III|IV|V|\\d+)",
+            "error_message": "Claims should be separately stated in numbered counts (FRCP 10(b))"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Prayer for Relief Required",
+          "rule_description": "Complaint must include prayer for relief (FRCP 8(a))",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Prayer for Relief",
+            "required": true,
+            "keywords": ["prayer", "wherefore", "demands"],
+            "error_message": "Complaint must include prayer for relief (FRCP 8(a)(3))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Demand for Jury Trial",
+          "rule_description": "If demanding jury trial, must be included (FRCP 38)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "optional_section",
+            "section_name": "Demand for Jury Trial",
+            "keywords": ["jury trial", "trial by jury", "FRCP 38"],
+            "error_message": "If demanding jury trial, include demand section (FRCP 38)"
+          },
+          "severity": "info"
+        }
+      ]
+    },
+    {
+      "template_name": "Federal Motion to Dismiss (FRCP 12(b)(6))",
+      "template_description": "Motion to dismiss for failure to state a claim under FRCP 12(b)(6)",
+      "template_category": "motion",
+      "state": null,
+      "jurisdiction_type": "federal",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Motion Title Format",
+          "rule_description": "Proper motion title with FRCP citation",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "title_contains",
+            "required_text": "MOTION TO DISMISS",
+            "recommended_text": "FRCP 12(b)(6)",
+            "error_message": "Motion should reference FRCP 12(b)(6) in title"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Standard of Review Stated",
+          "rule_description": "Motion must state the standard of review (Bell Atlantic v. Twombly, Ashcroft v. Iqbal)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_citations",
+            "required_cases": ["Twombly", "Iqbal"],
+            "error_message": "Motion should cite Twombly/Iqbal standard for 12(b)(6) dismissal"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Grounds for Dismissal Clearly Stated",
+          "rule_description": "Motion must clearly state why complaint fails to state a claim",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Argument",
+            "required": true,
+            "keywords": ["fails to state a claim", "plausible", "conclusory"],
+            "error_message": "Motion must clearly articulate why complaint fails to state a claim"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Supporting Case Law Cited",
+          "rule_description": "Motion should cite federal case law supporting dismissal",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_citations",
+            "citation_pattern": "\\d+ F\\.\\d+d \\d+|\\d+ U\\.S\\. \\d+",
+            "error_message": "Motion should cite supporting federal case law"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Proposed Order Attached",
+          "rule_description": "Motion should include proposed order per local rules",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Proposed Order",
+            "error_message": "Motion should include proposed order (check local rules)"
+          },
+          "severity": "info"
+        },
+        {
+          "rule_name": "Prayer for Relief",
+          "rule_description": "Motion must include specific relief requested",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Conclusion",
+            "required": true,
+            "keywords": ["wherefore", "respectfully requests", "dismiss"],
+            "error_message": "Motion must include prayer for specific relief"
+          },
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "template_name": "Federal Summary Judgment Motion (FRCP 56)",
+      "template_description": "Motion for summary judgment under FRCP 56",
+      "template_category": "motion",
+      "state": null,
+      "jurisdiction_type": "federal",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Motion Title with FRCP Citation",
+          "rule_description": "Motion title should reference FRCP 56",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "title_contains",
+            "required_text": "MOTION FOR SUMMARY JUDGMENT",
+            "recommended_text": "FRCP 56",
+            "error_message": "Motion should reference FRCP 56"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Statement of Material Facts",
+          "rule_description": "Motion must include statement of material facts not in dispute (FRCP 56(c))",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Statement of Undisputed Material Facts",
+            "required": true,
+            "error_message": "Motion must include statement of undisputed material facts (FRCP 56(c))"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Citation to Record Evidence",
+          "rule_description": "Each fact must cite to specific record evidence",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_citations",
+            "citation_types": ["Deposition", "Affidavit", "Exhibit", "Declaration"],
+            "error_message": "Facts must cite to specific record evidence (depositions, affidavits, etc.)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Standard of Review Stated",
+          "rule_description": "Motion should state summary judgment standard (Celotex, Anderson, Matsushita trilogy)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_keywords",
+            "keywords": ["no genuine dispute", "material fact", "entitled to judgment as a matter of law"],
+            "error_message": "Motion should state summary judgment standard (FRCP 56(a))"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Memorandum of Law Included",
+          "rule_description": "Motion should include legal argument memorandum",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "section_exists",
+            "section_name": "Memorandum of Law",
+            "required": true,
+            "error_message": "Motion should include memorandum of law in support"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "Proposed Order Attached",
+          "rule_description": "Proposed order should be attached",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_referenced",
+            "attachment_name": "Proposed Order",
+            "error_message": "Motion should include proposed order"
+          },
+          "severity": "info"
+        }
+      ]
+    },
+    {
+      "template_name": "Federal Notice of Removal (28 U.S.C. § 1441)",
+      "template_description": "Notice of removal from state court to federal district court",
+      "template_category": "notice",
+      "state": null,
+      "jurisdiction_type": "federal",
+      "template_source": "truevow",
+      "template_version": "1.0",
+      "rules": [
+        {
+          "rule_name": "Title - Notice of Removal",
+          "rule_description": "Document must be titled 'Notice of Removal'",
+          "rule_type": "format_check",
+          "rule_config": {
+            "check_type": "title_matches",
+            "required_title": "NOTICE OF REMOVAL",
+            "error_message": "Document must be titled 'NOTICE OF REMOVAL'"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Basis for Removal Stated",
+          "rule_description": "Notice must state basis for removal (28 U.S.C. § 1441, § 1446)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_citations",
+            "required_citations": ["28 U.S.C. § 1441", "28 U.S.C. § 1446"],
+            "error_message": "Notice must cite 28 U.S.C. § 1441 and § 1446"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Federal Jurisdiction Grounds",
+          "rule_description": "Notice must state grounds for federal jurisdiction (diversity or federal question)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_keywords",
+            "keywords": ["28 U.S.C. § 1331", "28 U.S.C. § 1332", "diversity jurisdiction", "federal question"],
+            "error_message": "Notice must state grounds for federal jurisdiction (§ 1331 or § 1332)"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "State Court Information",
+          "rule_description": "Notice must identify state court case",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_fields",
+            "required_fields": ["state court name", "case number", "filing date"],
+            "error_message": "Notice must identify state court, case number, and filing date"
+          },
+          "severity": "error"
+        },
+        {
+          "rule_name": "Timeliness Statement",
+          "rule_description": "Notice should state removal is timely (within 30 days)",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "contains_statement",
+            "keywords": ["timely", "30 days", "served"],
+            "error_message": "Notice should state removal is timely under 28 U.S.C. § 1446(b)"
+          },
+          "severity": "warning"
+        },
+        {
+          "rule_name": "State Court Copies Attached",
+          "rule_description": "All state court documents must be attached",
+          "rule_type": "content_check",
+          "rule_config": {
+            "check_type": "attachment_list",
+            "required_attachments": ["Complaint", "Summons", "Service documents"],
+            "error_message": "Must attach copies of all state court pleadings and process (§ 1446(a))"
+          },
+          "severity": "error"
+        }
+      ]
+    }
+  ]
+}
+

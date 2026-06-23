@@ -1,0 +1,90 @@
+# TrueVow DRAFT Service - Python Dependencies
+# Last Updated: April 2026
+
+# ============================================================================
+# CORE FRAMEWORK (min versions for Python 3.13 wheel compatibility)
+# ============================================================================
+# starlette <0.37 is incompatible with httpx 0.28+ (TestClient crashes)
+# starlette 1.0+ requires fastapi 0.110+
+fastapi>=0.110.0
+starlette>=0.37.0
+uvicorn[standard]>=0.27.0
+# Use >=2.6 so pip can pick a pydantic with pre-built wheels (Python 3.13 has no wheel for pydantic-core 2.16.x)
+pydantic>=2.6,<3
+pydantic-settings>=2.1.0
+
+# ============================================================================
+# DATABASE
+# ============================================================================
+# 2.0.25 fails on Python 3.13 (TypingOnly assertion). Use 2.0.36+.
+sqlalchemy>=2.0.36,<2.1
+# psycopg2-binary has no Python 3.13 wheel on Windows (needs C++ build). Use psycopg3 only.
+psycopg[binary]>=3.1.0
+alembic==1.13.1
+
+# ============================================================================
+# AUTHENTICATION & SECURITY
+# ============================================================================
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.9
+passlib[bcrypt]==1.7.4
+cryptography==42.0.2
+
+# ============================================================================
+# HTTP CLIENT (for external API calls if needed)
+# ============================================================================
+httpx>=0.26.0
+
+# ============================================================================
+# DATA VALIDATION & SERIALIZATION
+# ============================================================================
+# 2.1.0 is yanked; use a supported release (no C++ required)
+email-validator>=2.2.0
+python-dateutil==2.8.2
+
+# ============================================================================
+# ENVIRONMENT CONFIGURATION
+# ============================================================================
+python-dotenv==1.0.1
+
+# ============================================================================
+# LOGGING & MONITORING
+# ============================================================================
+loguru==0.7.2
+
+# ============================================================================
+# TESTING
+# ============================================================================
+# pytest 8.x conflicts with pytest-asyncio 0.23.x (requires pytest<8)
+pytest>=7.0,<8
+pytest-asyncio==0.23.4
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+httpx>=0.26.0  # For testing FastAPI endpoints
+# aiohttp 3.9.x has no Python 3.13 wheel on Windows (needs C++ build). Use newer version with wheels.
+aiohttp>=3.11.0
+
+# ============================================================================
+# CODE QUALITY
+# ============================================================================
+black==24.1.1
+flake8==7.0.0
+mypy==1.8.0
+isort==5.13.2
+
+# ============================================================================
+# DOCUMENTATION
+# ============================================================================
+# OpenAPI/Swagger documentation (included in FastAPI)
+
+# ============================================================================
+# UTILITIES
+# ============================================================================
+pytz==2024.1
+
+# ============================================================================
+# DOCUMENT PARSING (for server-side validation)
+# ============================================================================
+PyPDF2==3.0.1
+python-docx==1.1.0
+

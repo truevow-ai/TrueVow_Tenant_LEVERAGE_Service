@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrueVow DRAFT™ - Document Validation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+        
+    <div class="app-layout">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb-nav">
+            <div class="breadcrumb-trail" id="breadcrumbTrail">
+                <span class="breadcrumb-item active">Home</span>
+            </div>
+            <div class="user-info">
+                <span class="company-name">TrueVow Legal</span>
+            </div>
+        </nav>
+            
+        <div class="main-layout">
+            <!-- Contextual Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>Company Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Documents Validated</span>
+                        <span class="stat-value" id="docsValidated">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Pending Reviews</span>
+                        <span class="stat-value warning" id="pendingReviews">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Compliance Rate</span>
+                        <span class="stat-value success" id="complianceRate">0%</span>
+                    </div>
+                </div>
+                    
+                <div class="sidebar-section">
+                    <h3>Status Definitions</h3>
+                    <div class="status-item">
+                        <span class="status-indicator passed"></span>
+                        <span>Compliant</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-indicator warning"></span>
+                        <span>Needs Review</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-indicator failed"></span>
+                        <span>Non-Compliant</span>
+                    </div>
+                </div>
+            </aside>
+                
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="container">
+                    <header>
+                        <h1>TrueVow DRAFT™</h1>
+                        <p class="subtitle">Compliance Document Validator</p>
+                    </header>
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="validate">Validate Document</button>
+            <button class="tab" data-tab="history">Validation History</button>
+            <button class="tab" data-tab="rules">View Rules</button>
+            <button class="tab" data-tab="tools">Download Tools</button>
+        </nav>
+
+        <main>
+            <!-- Validate Document Tab -->
+            <section id="validate" class="tab-content active">
+                <div class="card">
+                    <h2>Validate Document</h2>
+                    <p>Upload a document to validate against compliance rules</p>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.txt" style="display: none;">
+                        <div class="upload-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p>Click to upload or drag and drop</p>
+                            <p class="file-types">PDF, DOCX, DOC, TXT</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="documentType">Document Type</label>
+                        <select id="documentType">
+                            <option value="demand_letter">Demand Letter</option>
+                            <option value="settlement_agreement">Settlement Agreement</option>
+                            <option value="pleading">Pleading</option>
+                            <option value="motion">Motion</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jurisdiction">Jurisdiction</label>
+                        <select id="jurisdiction">
+                            <option value="arizona">Arizona</option>
+                            <option value="california">California</option>
+                            <option value="texas">Texas</option>
+                            <option value="florida">Florida</option>
+                            <option value="new_york">New York</option>
+                        </select>
+                    </div>
+
+                    <button id="validateBtn" class="btn btn-primary" disabled>Validate Document</button>
+                </div>
+
+                <div id="validationResults" class="card hidden">
+                    <h2>Validation Results</h2>
+                    <div id="resultsContent"></div>
+                </div>
+            </section>
+
+            <!-- Validation History Tab -->
+            <section id="history" class="tab-content">
+                <div class="card">
+                    <h2>Validation History</h2>
+                    
+                    <div class="filters">
+                        <input type="text" id="searchInput" placeholder="Search...">
+                        <select id="filterType">
+                            <option value="all">All Types</option>
+                            <option value="demand_letter">Demand Letter</option>
+                            <option value="settlement_agreement">Settlement Agreement</option>
+                        </select>
+                        <input type="date" id="dateFrom" placeholder="From">
+                        <input type="date" id="dateTo" placeholder="To">
+                    </div>
+
+                    <div id="historyList" class="history-list">
+                        <p class="empty-state">No validation history yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View Rules Tab -->
+            <section id="rules" class="tab-content">
+                <div class="card">
+                    <h2>Validation Rules</h2>
+                    
+                    <div class="filters">
+                        <input type="text" id="ruleSearch" placeholder="Search rules...">
+                        <select id="rulePracticeArea">
+                            <option value="">All Practice Areas</option>
+                            <option value="personal_injury">Personal Injury</option>
+                            <option value="family_law">Family Law</option>
+                        </select>
+                        <select id="ruleDocumentType">
+                            <option value="">All Document Types</option>
+                            <option value="demand_letter">Demand Letter</option>
+                            <option value="settlement_agreement">Settlement Agreement</option>
+                        </select>
+                    </div>
+
+                    <div id="rulesList" class="rules-list">
+                        <p class="empty-state">Loading rules...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Download Tools Tab -->
+            <section id="tools" class="tab-content">
+                <div class="card">
+                    <h2>Download Client Tools</h2>
+                    <p>Install TrueVow DRAFT tools to validate documents directly in your applications</p>
+                    
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <h3>Browser Extension</h3>
+                            <p>Validate documents in Google Docs, Office 365, and other web editors</p>
+                            <button class="btn btn-primary" onclick="downloadTool('browser')">Download</button>
+                            <p class="tool-info">Chrome, Firefox, Edge</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <h3>Desktop Application</h3>
+                            <p>Validate local document files on your computer</p>
+                            <button class="btn btn-primary" onclick="downloadTool('desktop')">Download</button>
+                            <p class="tool-info">Windows, macOS, Linux</p>
+                        </div>
+
+                        <div class="tool-card">
+                            <h3>Word Add-In</h3>
+                            <p>Validate documents directly in Microsoft Word</p>
+                            <button class="btn btn-primary" onclick="downloadTool('word')">Download</button>
+                            <p class="tool-info">Microsoft Word 2016+</p>
+                        </div>
+                    </div>
+
+                    <div class="installation-instructions">
+                        <h3>Installation Instructions</h3>
+                        <div id="instructions"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+    <script src="draft-client.js"></script>
+    <script src="validation-engine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "TrueVow DRAFT™ Validator",
+  "version": "1.0.0",
+  "description": "Zero-knowledge legal document compliance validator. Validates documents locally - never uploads to servers.",
+  
+  "permissions": [
+    "storage",
+    "activeTab",
+    "notifications"
+  ],
+  
+  "host_permissions": [
+    "http://localhost:8003/*",
+    "https://*.truevow.com/*"
+  ],
+  
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "https://docs.google.com/*",
+        "https://*.office.com/*",
+        "https://*.sharepoint.com/*"
+      ],
+      "js": ["content_script.js"],
+      "css": ["content_styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  
+  "options_page": "options.html",
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["validation_panel.html", "styles.css"],
+      "matches": ["https://*/*"]
+    }
+  ]
+}
+
